@@ -289,6 +289,11 @@ namespace toad
 		inline int missclick_chance = 50; // chance of missing the item (will still go back and pick it up)
 	}
 
+	namespace inventory_cleaner
+	{
+		inline bool enabled = false;
+	}
+
 	namespace ui
 	{
 		// for internal ui 

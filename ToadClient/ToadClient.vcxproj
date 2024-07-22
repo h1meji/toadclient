@@ -60,6 +60,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="src\Toad\MC\mapping_generator.h" />
+    <ClInclude Include="src\Toad\Modules\inventory_cleaner.h" />
     <ClInclude Include="src\Toad\Utils\hash_map.h" />
     <ClInclude Include="src\Toad\MC\mapping_bytecodes.h" />
     <ClInclude Include="src\Toad\Modules\chest_stealer.h" />
@@ -118,6 +119,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="src\Toad\MC\mapping_generator.cpp" />
+    <ClCompile Include="src\Toad\Modules\inventory_cleaner.cpp" />
     <ClCompile Include="src\Toad\Utils\hash_map.cpp" />
     <ClCompile Include="src\Toad\Modules\chest_stealer.cpp" />
     <ClCompile Include="src\dllmain.cpp" />

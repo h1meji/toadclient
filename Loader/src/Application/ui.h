@@ -238,6 +238,7 @@ namespace toad::ui
                     static bool is_Blink = false;
                     static bool is_ArrayList = false;
                     static bool is_ChestStealer = false;
+                    static bool is_InventoryCleaner = false;
                     if (checkbox_button("Auto Bridge", ICON_FA_CUBE, &bridge_assist::enabled)) is_Bridge = true;
 					ImGui::SameLine(0, 80);
 					if (checkbox_button("Array List", ICON_FA_BARS, &ui::show_array_list)) is_ArrayList = true;
@@ -246,6 +247,8 @@ namespace toad::ui
 					if (checkbox_button("Chest Stealer", ICON_FA_BOX_OPEN, &chest_stealer::enabled)) is_ChestStealer = true;
                     if (checkbox_button("Block ESP", ICON_FA_CUBES, &block_esp::enabled)) is_BlockEsp = true;
                     if (checkbox_button("Blink", ICON_FA_GHOST, &blink::enabled)) is_Blink = true;
+
+                    if (checkbox_button("Inventory Cleaner", ICON_FA_BROOM, &inventory_cleaner::enabled)) is_InventoryCleaner = true;
 
                     if (is_Bridge)
                     {
@@ -466,6 +469,15 @@ namespace toad::ui
 
                                 center_text_multi({ 1, 1, 0, 0.5f }, "This feature is WIP. \n only works on small chests. \n Or not at all.");
 							});
+                    }
+
+                    else if (is_InventoryCleaner)
+                    {
+                        setting_menu("Inventory Cleaner", is_InventoryCleaner, []
+                            {
+                                // #TODO: add array list options
+                                center_text_multi({ 1,1,1,1 }, "WIP. \n customisation options will be \n added here later");
+                            });
                     }
                 }
                 else if (tab == 2)

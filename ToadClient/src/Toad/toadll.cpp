@@ -529,6 +529,8 @@ bool UpdateSettings()
 	CLeftAutoClicker::SetDelays(left_clicker::min_cps, left_clicker::max_cps);
 	CRightAutoClicker::SetDelays(right_clicker::cps);
 
+	CInventoryCleaner::GetInstance()->UpdateEnabledState();
+
 	UnmapViewOfFile(pMem);
 	CloseHandle(hMapFile);
 
@@ -550,6 +552,8 @@ void init_modules()
 	CBridgeAssist::GetInstance()->Name = "Auto bridge";
 	CNoClickDelay::GetInstance()->Name = "No Click Delay";
 	CChestStealer::GetInstance()->Name = "Chest Stealer";
+
+	CInventoryCleaner::GetInstance()->Name = "Inventory Cleaner";
 
 	//CReach::GetInstance()->name = "Reach";
 	//COfScreenArrows::GetInstance()->name = "Off Screen Arrow ESP";

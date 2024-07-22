@@ -51,6 +51,7 @@
 #include "Modules/reach.h"
 #include "Modules/velocity.h"
 #include "Modules/chest_stealer.h"
+#include "Modules/inventory_cleaner.h"
 #include "Modules/internal_ui.h"
 
 #include "MinHook/include/MinHook.h"
