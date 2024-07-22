@@ -43,6 +43,7 @@ namespace toadll
 		BBox get_BBox() const;
 
 		std::array<std::string, 4> getArmor();
+		std::array<std::string, 40> getInventory();
 
 	public:
 		void setRotationYaw(float newYaw) const;

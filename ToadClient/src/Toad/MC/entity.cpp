@@ -282,6 +282,52 @@ std::array<std::string, 4> toadll::c_Entity::getArmor()
 	return res;
 }
 
+std::array<std::string, 40> toadll::c_Entity::getInventory()
+{
+	auto fId = get_fid(obj, mappingFields::inventoryField, env);
+	if (!fId)
+		return {};
+
+	auto inventory = env->GetObjectField(obj, fId);
+	auto mId = get_mid(inventory, mapping::getStackInSlot, env);
+	if (!mId)
+	{
+		env->DeleteLocalRef(inventory);
+		return {};
+	}
+
+	std::array<std::string, 40> res;
+	for (int i = 0; i < 40; i++)
+	{
+		auto item_at_slot = env->CallObjectMethod(inventory, mId, i);
+
+		if (!item_at_slot) // no item held
+		{
+			res[i] = "";
+		}
+
+		static jmethodID toStrMid = nullptr;
+		if (static bool once = true; once)
+		{
+			auto klass = env->GetObjectClass(inventory);
+			loop_through_class(klass, env);
+			toStrMid = get_mid(klass, mapping::toString, env);
+			env->DeleteLocalRef(klass);
+			once = false;
+		}
+
+		auto data = (jstring)env->CallObjectMethod(item_at_slot, toStrMid);
+		auto dataStr = jstring2string(data, env);
+		res[i] = dataStr;
+
+		env->DeleteLocalRef(data);
+		env->DeleteLocalRef(item_at_slot);
+	}
+
+	env->DeleteLocalRef(inventory);
+	return res;
+}
+
 //jobject toadll::c_Entity::get_open_container() const
 //{
 //	return env->CallObjectMethod(obj, get_mid(obj, mapping::getOpenContainer));
