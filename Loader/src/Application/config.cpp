@@ -236,6 +236,9 @@ bool LoadSettings(std::string_view jsonSettings, std::string& error_msg)
 
 			block_esp::block_list = tmpList;
 		}
+
+		// inventory cleaner
+		get_json_element(inventory_cleaner::enabled, data, "inventorycleaner_enabled");
 	}
 	catch (json::out_of_range& e)
 	{
@@ -464,6 +467,9 @@ json SettingsToJson()
 		};
 	}
 	data["block_esp_array"] = blockArray;
+
+	// inventory cleaner
+	data["inventorycleaner_enabled"] = inventory_cleaner::enabled;
 
 	return data;
 }
