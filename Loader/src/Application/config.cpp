@@ -242,8 +242,7 @@ bool LoadSettings(std::string_view jsonSettings, std::string& error_msg)
 		get_json_element(inventory_cleaner::key, data, "ic_key");
 		get_json_element(inventory_cleaner::delay, data, "ic_delay");
 
-		get_json_element(inventory_cleaner::inventory_layouts, data, "ic_inventory_layouts");
-		get_json_element(inventory_cleaner::current_layout, data, "ic_current_layout");
+		get_json_element(inventory_cleaner::inventory_layout, data, "ic_inventory_layout");
 
 		get_json_element(inventory_cleaner::show_slot_positions, data, "ic_show_slot_pos");
 
@@ -492,8 +491,7 @@ json SettingsToJson()
 	data["ic_delay"] = inventory_cleaner::delay;
 	data["ic_show_slot_pos"] = inventory_cleaner::show_slot_positions;
 
-	data["ic_inventory_layouts"] = inventory_cleaner::inventory_layouts;
-	data["ic_current_layout"] = inventory_cleaner::current_layout;
+	data["ic_inventory_layout"] = inventory_cleaner::inventory_layout;
 
 	json ic_slot_info;
 	ic_slot_info["beginx"] = inventory_cleaner::slot_info.begin_x;

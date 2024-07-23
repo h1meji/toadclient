@@ -296,8 +296,7 @@ namespace toad
 
 		inline int delay = 0;
 
-		inline std::vector<std::vector<std::string>> inventory_layouts{};
-		inline int current_layout = 0;
+		inline std::vector<std::string> inventory_layout{};
 
 		inline bool show_slot_positions = false;
 		inline ChestStealerSlotLocationInfo slot_info{};
