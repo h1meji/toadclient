@@ -292,6 +292,15 @@ namespace toad
 	namespace inventory_cleaner
 	{
 		inline bool enabled = false;
+		inline int key = -1;
+
+		inline int delay = 0;
+
+		inline std::vector<std::vector<std::string>> inventory_layouts{};
+		inline int current_layout = 0;
+
+		inline bool show_slot_positions = false;
+		inline ChestStealerSlotLocationInfo slot_info{};
 	}
 
 	namespace ui

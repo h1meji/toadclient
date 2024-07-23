@@ -238,7 +238,39 @@ bool LoadSettings(std::string_view jsonSettings, std::string& error_msg)
 		}
 
 		// inventory cleaner
-		get_json_element(inventory_cleaner::enabled, data, "inventorycleaner_enabled");
+		get_json_element(inventory_cleaner::enabled, data, "ic_enabled");
+		get_json_element(inventory_cleaner::key, data, "ic_key");
+		get_json_element(inventory_cleaner::delay, data, "ic_delay");
+
+		json inventory_layouts;
+		if (get_json_element(inventory_layouts, data, "ic_inventory_layouts"))
+		{
+			std::vector<std::vector<std::string>> tmpList{};
+			for (int i = 0; i < inventory_layouts.size(); i++)
+			{
+				for (int j = 0; j < inventory_layouts[i].size(); j++)
+				{
+					tmpList[i][j] = inventory_layouts[i][j];
+				}
+			}
+
+			inventory_cleaner::inventory_layouts = tmpList;
+		}
+
+		get_json_element(inventory_cleaner::current_layout, data, "ic_current_layout");
+
+		get_json_element(inventory_cleaner::show_slot_positions, data, "ic_show_slot_pos");
+
+		json ic_slot_info;
+		get_json_element(ic_slot_info, data, "ic_slot_info");
+		ChestStealerSlotLocationInfo info;
+		info.begin_x = ic_slot_info.at("beginx");
+		info.begin_y = ic_slot_info.at("beginy");
+		info.space_x = ic_slot_info.at("spacex");
+		info.space_y = ic_slot_info.at("spacey");
+		info.res_x = ic_slot_info.at("resx");
+		info.res_y = ic_slot_info.at("resy");
+		inventory_cleaner::slot_info = info;
 	}
 	catch (json::out_of_range& e)
 	{
@@ -469,7 +501,22 @@ json SettingsToJson()
 	data["block_esp_array"] = blockArray;
 
 	// inventory cleaner
-	data["inventorycleaner_enabled"] = inventory_cleaner::enabled;
+	data["ic_enabled"] = inventory_cleaner::enabled;
+	data["ic_key"] = inventory_cleaner::key;
+	data["ic_delay"] = inventory_cleaner::delay;
+	data["ic_show_slot_pos"] = inventory_cleaner::show_slot_positions;
+
+	data["ic_inventory_layouts"] = inventory_cleaner::inventory_layouts;
+	data["ic_current_layout"] = inventory_cleaner::current_layout;
+
+	json ic_slot_info;
+	ic_slot_info["beginx"] = inventory_cleaner::slot_info.begin_x;
+	ic_slot_info["beginy"] = inventory_cleaner::slot_info.begin_y;
+	ic_slot_info["spacex"] = inventory_cleaner::slot_info.space_x;
+	ic_slot_info["spacey"] = inventory_cleaner::slot_info.space_y;
+	ic_slot_info["resx"] = inventory_cleaner::slot_info.res_x;
+	ic_slot_info["resy"] = inventory_cleaner::slot_info.res_y;
+	data["ic_slot_info"] = ic_slot_info;
 
 	return data;
 }

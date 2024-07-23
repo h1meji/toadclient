@@ -475,8 +475,15 @@ namespace toad::ui
                     {
                         setting_menu("Inventory Cleaner", is_InventoryCleaner, []
                             {
-                                // #TODO: add array list options
-                                center_text_multi({ 1,1,1,1 }, "WIP. \n customisation options will be \n added here later");
+                                ImGui::Text("key");
+                                ImGui::SameLine();
+                                keybind_button(inventory_cleaner::key);
+
+                                ImGui::SliderInt("delay ms", &inventory_cleaner::delay, 0, 200);
+
+                                ImGui::Checkbox("update inventory layouts", &chest_stealer_slot_info_edit);
+
+                                ImGui::Checkbox("set slot positions", &chest_stealer_slot_info_edit);
                             });
                     }
                 }
