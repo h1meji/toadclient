@@ -39,6 +39,10 @@ private:
 
 	static inline void right_mouse_down(const POINT & pt);
 	static inline void right_mouse_up(const POINT & pt);
+
+	int extractSlotNumber(const std::string & s);
+	std::string extractItemName(const std::string & s);
+	std::string extractAfterX(const std::string & s);
 };
 
 };

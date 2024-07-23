@@ -102,4 +102,33 @@ namespace toadll
 		for (int y = armor_y, sloty = 0; sloty < 4; y -= info->space_y, sloty++)
 			m_slotPosOffset[index++] = { info->begin_x, y };
 	}
+
+	int CInventoryCleaner::extractSlotNumber(const std::string& s) {
+		if (s.empty())
+			return -1;
+		std::stringstream ss(s);
+		std::string slot;
+		std::getline(ss, slot, '|');
+		return std::stoi(slot);
+	}
+
+	std::string CInventoryCleaner::extractItemName(const std::string& s) {
+		if (s.empty())
+			return "";
+		std::size_t pos = s.find('|');
+		if (pos != std::string::npos) {
+			return s.substr(pos + 1);
+		}
+		return "";
+	}
+
+	std::string CInventoryCleaner::extractAfterX(const std::string& s) {
+		if (s.empty())
+			return "";
+		std::size_t pos = s.find('x');
+		if (pos != std::string::npos) {
+			return s.substr(pos + 1);
+		}
+		return "";
+	}
 }
