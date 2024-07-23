@@ -103,6 +103,44 @@ namespace toadll
 			m_slotPosOffset[index++] = { info->begin_x, y };
 	}
 
+	void CInventoryCleaner::SetupDropPath()
+	{
+		m_indexDropPath.clear();
+
+		for (int i = 0; i < m_inventoryContents.size(); i++)
+		{
+			const std::string& name = extractAfterX(m_inventoryContents[i]);
+			if (name.empty())
+			{
+				continue;
+			}
+
+			if (!inventory_cleaner::inventory_layout.empty())
+			{
+				bool found = false;
+				for (const auto& item : inventory_cleaner::inventory_layout)
+				{
+					if (name.find(extractItemName(item)) != std::string::npos)
+					{
+						found = true;
+						break;
+					}
+				}
+
+				if (!found)
+				{
+					m_indexDropPath.emplace_back(i);
+				}
+			}
+		}
+
+		// for now it just randomizes the path
+		static auto rng = std::default_random_engine{};
+		std::ranges::shuffle(m_indexDropPath, rng);
+
+		m_indexDropPath.emplace_back(-1);
+	}
+
 	int CInventoryCleaner::extractSlotNumber(const std::string& s) {
 		if (s.empty())
 			return -1;
