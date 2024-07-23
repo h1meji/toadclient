@@ -19,6 +19,9 @@ private:
 	void SetupDropPath();
 	void SetupMovePath();
 
+	void DropItems();
+	void MoveItems();
+
 	POINT get_middle_of_screen() const;
 
 private:
