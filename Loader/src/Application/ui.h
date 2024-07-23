@@ -735,7 +735,7 @@ namespace toad::ui
 
         if (inventory_cleaner_slot_info_edit)
         {
-            inventory_cleaner_slotpos_setter(&inventory_cleaner_layouts_edit);
+            inventory_cleaner_slotpos_setter(&inventory_cleaner_slot_info_edit);
         }
 
         ImGui::End();
