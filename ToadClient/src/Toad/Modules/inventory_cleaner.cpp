@@ -24,8 +24,6 @@ namespace toadll
 			SLEEP(100);
 			return;
 		}
-
-		LOGDEBUG("[inventory cleaner] enabled");
 	}
 	void CInventoryCleaner::OnImGuiRender(ImDrawList* draw)
 	{
