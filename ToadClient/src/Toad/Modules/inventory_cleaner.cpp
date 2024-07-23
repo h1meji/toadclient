@@ -27,6 +27,43 @@ namespace toadll
 	}
 	void CInventoryCleaner::OnImGuiRender(ImDrawList* draw)
 	{
+		if (CVarsUpdater::IsInGui && inventory_cleaner::show_slot_positions)
+		{
+			UpdateSlotPosOffsets();
+
+			ImVec2 middle = ImGui::GetMainViewport()->Size;
+			middle.x /= 2;
+			middle.y /= 2;
+
+			// imgui coordinates? 
+			middle.x -= 12;
+			middle.y -= 40;
+
+			RECT desktop;
+			GetWindowRect(GetDesktopWindow(), &desktop);
+			int horizontal = (int)desktop.right;
+			int vertical = (int)desktop.bottom;
+
+			if (g_screen_height == vertical && g_screen_width == horizontal)
+			{
+				// imgui coordinates? 
+
+				middle.y += 34;
+				middle.x += 9;
+			}
+
+			for (int i = 0; i < 40; i++)
+			{
+				POINT pos = m_slotPosOffset[i];
+
+				pos.x += (int)middle.x;
+				pos.y += (int)middle.y;
+
+				//const std::string& name = m_chestContents[i];
+				//const char* text = !name.empty() ? name.c_str() : std::to_string(i).c_str();
+				draw->AddText({ (float)pos.x, (float)pos.y }, IM_COL32(255, 0, 0, 255), "T");
+			}
+		}
 	}
 
 	void CInventoryCleaner::UpdateSlotPosOffsets()
