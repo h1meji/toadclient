@@ -6,6 +6,8 @@
 
 #include <string>
 
+#include <stdexcept>
+
 std::thread init_thread;
 
 namespace toad::ui
@@ -763,11 +765,89 @@ namespace toad::ui
         ImGui::End();
     }
 
-    void inventory_cleaner_layouts_editor(bool* enabled)
+    void inventory_cleaner_layout_editor(bool* enabled)
     {
+        static char buf[64];
+        static char rename_buf[64];
+        static int selected_item_index = -1;
+        static bool rename_item = false;
+        static ImGuiID ic_items_popup = ImHashStr("POPUP_IC_ITEMS");
+
         ImGui::Begin("Inventory Cleaner Layout Settings", enabled, ImGuiWindowFlags_NoSavedSettings);
         {
+            if (ImGui::Button("Import Current Inventory"))
+            {
+            }
+            ImGui::SameLine();
+            ImGui::Text("/!\\ This will earse current settings /!\\");
 
+            ImGui::NewLine();
+
+            ImGui::Text("ex: \"0|item.swordDiamond@0\"");
+            ImGui::Text("ex: \"1|tile.stone@0\"");
+            if (ImGui::InputText("", buf, 64, ImGuiInputTextFlags_EnterReturnsTrue))
+            {
+                inventory_cleaner::inventory_layout.emplace_back(buf);
+            }
+            ImGui::SameLine();
+            ImGui::BeginDisabled(strlen(buf) == 0);
+            if (ImGui::Button("Add"))
+            {
+                inventory_cleaner::inventory_layout.emplace_back(buf);
+            }
+            ImGui::EndDisabled();
+
+            ImGui::BeginChild("Items", { 0, 0 }, ImGuiChildFlags_Border);
+            {
+                for (size_t i = 0; i < inventory_cleaner::inventory_layout.size(); i++)
+                {
+                    std::string& item = inventory_cleaner::inventory_layout[i];
+
+                    if (i == selected_item_index && rename_item)
+                    {
+                        if (ImGui::InputText("", rename_buf, 64, ImGuiInputTextFlags_EnterReturnsTrue))
+                        {
+                            item = rename_buf;
+                            memset(rename_buf, '\0', 64);
+                            rename_item = false;
+                        }
+                    }
+                    else
+                    {
+                        ImGui::Selectable(item.c_str());
+                    }
+                    if (ImGui::IsItemClicked(ImGuiMouseButton_Right))
+                    {
+                        ImGui::PushOverrideID(ic_items_popup);
+                        ImGui::OpenPopup("POPUP_IC_ITEMS");
+                        ImGui::PopID();
+                        selected_item_index = (int)i;
+                        strcpy_s(rename_buf, item.c_str());
+                    }
+                    if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
+                    {
+                        selected_item_index = (int)i;
+                        strcpy_s(rename_buf, item.c_str());
+                        rename_item = true;
+                    }
+                }
+            }
+            ImGui::EndChild();
+
+            ImGui::PushOverrideID(ic_items_popup);
+            if (ImGui::BeginPopup("POPUP_IC_ITEMS"))
+            {
+                if (ImGui::MenuItem("Delete"))
+                {
+                    inventory_cleaner::inventory_layout.erase(inventory_cleaner::inventory_layout.begin() + selected_item_index);
+                }
+                if (ImGui::MenuItem("Rename"))
+                {
+                    rename_item = true;
+                }
+                ImGui::EndPopup();
+            }
+            ImGui::PopID();
         }
         ImGui::End();
     }

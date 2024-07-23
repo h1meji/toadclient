@@ -25,7 +25,7 @@ namespace toad::ui
     extern void clicker_rand_visualizer(bool* enabled);
     extern void esp_visualizer(bool* enabled);
     extern void chest_stealer_slotpos_setter(bool* enabled);
-    extern void inventory_cleaner_layouts_editor(bool* enabled);
+    extern void inventory_cleaner_layout_editor(bool* enabled);
     extern void inventory_cleaner_slotpos_setter(bool* enabled);
 
     // UI for toad when injected
@@ -730,7 +730,7 @@ namespace toad::ui
 
         if (inventory_cleaner_layouts_edit)
         {
-            inventory_cleaner_layouts_editor(&inventory_cleaner_layouts_edit);
+            inventory_cleaner_layout_editor(&inventory_cleaner_layouts_edit);
         }
 
         if (inventory_cleaner_slot_info_edit)
