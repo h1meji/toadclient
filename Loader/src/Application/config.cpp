@@ -242,21 +242,7 @@ bool LoadSettings(std::string_view jsonSettings, std::string& error_msg)
 		get_json_element(inventory_cleaner::key, data, "ic_key");
 		get_json_element(inventory_cleaner::delay, data, "ic_delay");
 
-		json inventory_layouts;
-		if (get_json_element(inventory_layouts, data, "ic_inventory_layouts"))
-		{
-			std::vector<std::vector<std::string>> tmpList{};
-			for (int i = 0; i < inventory_layouts.size(); i++)
-			{
-				for (int j = 0; j < inventory_layouts[i].size(); j++)
-				{
-					tmpList[i][j] = inventory_layouts[i][j];
-				}
-			}
-
-			inventory_cleaner::inventory_layouts = tmpList;
-		}
-
+		get_json_element(inventory_cleaner::inventory_layouts, data, "ic_inventory_layouts");
 		get_json_element(inventory_cleaner::current_layout, data, "ic_current_layout");
 
 		get_json_element(inventory_cleaner::show_slot_positions, data, "ic_show_slot_pos");
