@@ -718,4 +718,57 @@ namespace toad::ui
 		ImGui::End();
     }
 
+    void inventory_cleaner_slotpos_setter(bool* enabled)
+    {
+        ImGui::Begin("Inventory Cleaner Slot Settings", enabled, ImGuiWindowFlags_NoSavedSettings);
+        {
+            ImGui::Checkbox("show slot positions", &inventory_cleaner::show_slot_positions);
+
+            ImGui::DragInt("space x", &inventory_cleaner::slot_info.space_x);
+            ImGui::DragInt("space y", &inventory_cleaner::slot_info.space_y);
+            ImGui::DragInt("pos x", &inventory_cleaner::slot_info.begin_x);
+            ImGui::DragInt("pos y", &inventory_cleaner::slot_info.begin_y);
+
+            bool bind_to_res = inventory_cleaner::slot_info.res_x != -1 || inventory_cleaner::slot_info.res_y != -1;
+            if (ImGui::Checkbox("bind to resolution", &bind_to_res))
+            {
+                if (bind_to_res)
+                {
+#ifdef TOAD_LOADER
+                    // #TODO: thes give weird values when in fullscreen.
+                    RECT r;
+                    GetWindowRect(toad::g_injected_window.hwnd, &r);
+
+                    inventory_cleaner::slot_info.res_x = r.right - r.left - 16;
+                    inventory_cleaner::slot_info.res_y = r.bottom - r.top - 39;
+#else
+                    inventory_cleaner::slot_info.res_x = toadll::g_screen_width;
+                    inventory_cleaner::slot_info.res_y = toadll::g_screen_height;
+#endif 
+                }
+                else
+                {
+                    inventory_cleaner::slot_info.res_x = -1;
+                    inventory_cleaner::slot_info.res_y = -1;
+                }
+            }
+            ImGui::BeginDisabled(inventory_cleaner::slot_info.res_x == -1 || inventory_cleaner::slot_info.res_y == -1);
+
+            ImGui::DragInt("res x", &inventory_cleaner::slot_info.res_x);
+            ImGui::DragInt("res y", &inventory_cleaner::slot_info.res_y);
+
+            ImGui::EndDisabled();
+
+        }
+        ImGui::End();
+    }
+
+    void inventory_cleaner_layouts_editor(bool* enabled)
+    {
+        ImGui::Begin("Inventory Cleaner Layout Settings", enabled, ImGuiWindowFlags_NoSavedSettings);
+        {
+
+        }
+        ImGui::End();
+    }
 }
