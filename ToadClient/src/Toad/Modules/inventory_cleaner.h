@@ -17,10 +17,6 @@ public:
 
 private:
 	void SetupDropPath();
-	void SetupMovePath();
-
-	void DropItems();
-	void MoveItems();
 
 	POINT get_middle_of_screen() const;
 
@@ -31,17 +27,11 @@ private:
 
 	// ends with -1
 	std::deque<int> m_indexDropPath{};
-	std::deque<std::array<int, 2>> m_indexMovePath{};
 
 	std::mutex m_mutex;
 
 	bool m_isCtrlDown = false;
 
-	static inline void right_mouse_down(const POINT & pt);
-	static inline void right_mouse_up(const POINT & pt);
-
-	int extractSlotNumber(const std::string & s);
-	std::string extractItemName(const std::string & s);
 	std::string extractAfterX(const std::string & s);
 };
 

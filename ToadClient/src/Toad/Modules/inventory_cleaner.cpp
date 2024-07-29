@@ -29,10 +29,10 @@ namespace toadll
 		static int index = -1;
 		static int step_counter = 0;
 		static bool stopped = false;
-		static bool dropped = false;
 
 		if (stopped)
 		{
+			LOGDEBUG("[inventory cleaner] stopping");
 			if (m_isCtrlDown)
 			{
 				send_key(VK_CONTROL, false);
@@ -51,6 +51,7 @@ namespace toadll
 
 		if ((GetAsyncKeyState(inventory_cleaner::key) & 0x8000 && CVarsUpdater::IsInGui) || cleaning)
 		{
+			LOGDEBUG("[inventory cleaner] key pressed or already cleaning");
 			UpdateSlotPosOffsets();
 
 			if (!cleaning)
@@ -74,9 +75,6 @@ namespace toadll
 				SetupDropPath();
 				LOGDEBUG("[inventory cleaner] dropping {} items", m_indexDropPath.size() - 2);
 
-				LOGDEBUG("inventory size: {}", m_inventoryContents.size());
-				LOGDEBUG("drop path size: {}", m_indexDropPath.size());
-
 				step_counter = 0;
 
 				// get the first index from the path
@@ -94,21 +92,21 @@ namespace toadll
 				GetCursorPos(&current_pos);
 			}
 		
-			if (!dropped && index != -1)
+			if (index != -1)
 			{
 				if (step_counter > 1 && ((GetAsyncKeyState(inventory_cleaner::key) & 0x8000) || GetAsyncKeyState(0x45 /*E*/) & 0x8000 || GetAsyncKeyState(VK_ESCAPE) & 0x8000))
 				{
+					LOGDEBUG("[inventory cleaner] stopping");
 					step_counter = 0;
 					index = -1;
 					cleaning = false;
-					dropped = false;
 
 					stopped = true;
 
 					return;
 				}
 
-				const std::string& name = m_inventoryContents[index];
+				LOGDEBUG("[inventory cleaner] getting next position");
 				POINT pos = m_slotPosOffset[index];
 				const POINT middle = get_middle_of_screen();
 
@@ -117,13 +115,10 @@ namespace toadll
 
 				if (aim_timer.Elapsed() > inventory_cleaner::delay)
 				{
-					// make sure mouse is on slot and right click
+					LOGDEBUG("[inventory cleaner] moving mouse, and pressing Q");
+					// make sure mouse is on slot and press "Q"
 					SetCursorPos(pos.x, pos.y);
 					SLEEP(rand_int(50, 60));
-
-					/*right_mouse_down(pos);
-					SLEEP(rand_int(35, 70));
-					right_mouse_up(pos);*/
 
 					// send "Q"
 					send_key(0x51);
@@ -142,21 +137,16 @@ namespace toadll
 				}
 				else
 				{
+					LOGDEBUG("[inventory cleaner] lerping mouse");
 					float t = std::clamp(aim_timer.Elapsed() / inventory_cleaner::delay, 0.f, 1.f);
 					int x_lerp = (int)slerp((float)current_pos.x, (float)pos.x, t);
 					int y_lerp = (int)slerp((float)current_pos.y, (float)pos.y, t);
 					SetCursorPos(x_lerp, y_lerp);
 				}
-
-				if (index == -1)
-					dropped = true;
-			}
-			else if (dropped && index != -1)
-			{
-				LOGDEBUG("MOVING ITEMS!");
 			}
 			else
 			{
+				LOGDEBUG("[inventory cleaner] ended");
 				if (m_isCtrlDown)
 				{
 					send_key(VK_CONTROL, false);
@@ -164,7 +154,6 @@ namespace toadll
 				}
 
 				cleaning = false;
-				dropped = false;
 			}
 
 			//LOGDEBUG("looting = true");
@@ -180,11 +169,11 @@ namespace toadll
 			}
 
 			cleaning = false;
-			dropped = false;
 		}
 
 		if (index == -1)
 		{
+			//LOGDEBUG("[inventory cleaner] ended, stopping everything");
 			if (m_isCtrlDown)
 			{
 				send_key(VK_CONTROL, false);
@@ -192,7 +181,6 @@ namespace toadll
 			}
 
 			cleaning = false;
-			dropped = false;
 		}
 	}
 	void CInventoryCleaner::OnImGuiRender(ImDrawList* draw)
@@ -290,7 +278,7 @@ namespace toadll
 				bool found = false;
 				for (const auto& item : inventory_cleaner::inventory_layout)
 				{
-					if (name.find(extractItemName(item)) != std::string::npos)
+					if (name.find(item) != std::string::npos)
 					{
 						found = true;
 						break;
@@ -304,30 +292,11 @@ namespace toadll
 			}
 		}
 
-		//// for now it just randomizes the path
-		//static auto rng = std::default_random_engine{};
-		//std::ranges::shuffle(m_indexDropPath, rng);
+		// for now it just randomizes the path
+		static auto rng = std::default_random_engine{};
+		std::ranges::shuffle(m_indexDropPath, rng);
 
 		m_indexDropPath.emplace_back(-1);
-	}
-
-	int CInventoryCleaner::extractSlotNumber(const std::string& s) {
-		if (s.empty())
-			return -1;
-		std::stringstream ss(s);
-		std::string slot;
-		std::getline(ss, slot, '|');
-		return std::stoi(slot);
-	}
-
-	std::string CInventoryCleaner::extractItemName(const std::string& s) {
-		if (s.empty())
-			return "";
-		std::size_t pos = s.find('|');
-		if (pos != std::string::npos) {
-			return s.substr(pos + 1);
-		}
-		return "";
 	}
 
 	std::string CInventoryCleaner::extractAfterX(const std::string& s) {
